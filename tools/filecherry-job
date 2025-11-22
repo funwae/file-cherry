@@ -1,0 +1,90 @@
+#!/usr/bin/env python3
+"""
+Print manifest summary for a specific job.
+
+Usage: filecherry-job <job-id>
+"""
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+DATA_DIR = Path(os.getenv("FILECHERRY_DATA_DIR", "/data"))
+OUTPUTS_DIR = DATA_DIR / "outputs"
+
+
+def load_job_manifest(job_id: str) -> dict:
+    """Load job manifest."""
+    manifest_path = OUTPUTS_DIR / job_id / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+
+    try:
+        with open(manifest_path, "r") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"Error loading manifest: {e}", file=sys.stderr)
+        return {}
+
+
+def print_manifest(job_id: str):
+    """Print manifest summary."""
+    manifest = load_job_manifest(job_id)
+
+    if not manifest:
+        print(f"Job {job_id} not found.", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Job ID: {job_id}")
+    print(f"Status: {manifest.get('status', 'unknown')}")
+    print(f"Created: {manifest.get('created_at', 'unknown')}")
+    print()
+
+    plan = manifest.get("plan", {})
+    if plan:
+        print("Plan Summary:")
+        print(f"  {plan.get('summary', 'No summary')}")
+        print()
+
+    steps = manifest.get("steps", [])
+    if steps:
+        print("Steps:")
+        for i, step in enumerate(steps, 1):
+            status_icon = {
+                "completed": "✓",
+                "running": "●",
+                "failed": "✗",
+                "pending": "○",
+            }.get(step.get("status", "unknown"), "?")
+
+            print(f"  {status_icon} Step {i}: {step.get('name', step.get('type', 'unknown'))}")
+            if step.get("error"):
+                print(f"    Error: {step['error']}")
+
+    outputs = manifest.get("outputs", {})
+    if outputs:
+        print()
+        print("Outputs:")
+        for output_type, files in outputs.items():
+            if files:
+                print(f"  {output_type}: {len(files)} file(s)")
+                for file_path in files[:5]:
+                    print(f"    - {file_path}")
+                if len(files) > 5:
+                    print(f"    ... and {len(files) - 5} more")
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description="Show FileCherry job details")
+    parser.add_argument("job_id", help="Job ID")
+    args = parser.parse_args()
+
+    print_manifest(args.job_id)
+
+
+if __name__ == "__main__":
+    main()
+

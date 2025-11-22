@@ -1,0 +1,14 @@
+[Unit]
+Description=FileCherry Log Rotation
+After=data.mount
+
+[Service]
+Type=oneshot
+Environment=FILECHERRY_DATA_DIR=/data
+Environment=LOG_RETENTION_DAYS=30
+Environment=LOG_MAX_SIZE_MB=512
+ExecStart=/opt/filecherry/tools/rotate_logs.sh
+
+[Install]
+WantedBy=timers.target
+

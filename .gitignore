@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+.next/
+out/
+.npm
+.yarn/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# FileCherry specific
+dev-data/outputs/
+dev-data/logs/*
+dev-data/runtime/*
+!dev-data/runtime/.gitkeep
+build/
+*.iso
+
+# Secrets
+config/secrets.yaml
+*.key
+*.pem
+

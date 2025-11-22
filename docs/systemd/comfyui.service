@@ -1,0 +1,21 @@
+[Unit]
+Description=ComfyUI System Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ComfyUI
+ExecStart=/opt/ComfyUI/venv/bin/python main.py --listen 0.0.0.0 --port 8188
+Restart=always
+RestartSec=5
+User=filecherry
+Group=filecherry
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=comfyui
+
+[Install]
+WantedBy=multi-user.target
+

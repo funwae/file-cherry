@@ -1,0 +1,22 @@
+[Unit]
+Description=FileCherry Kiosk Browser
+After=graphical.target filecherry-ui.service
+Requires=filecherry-ui.service
+
+[Service]
+Type=simple
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/chromium-browser --kiosk --noerrdialogs --disable-infobars --autoplay-policy=no-user-gesture-required http://localhost:3000
+Restart=on-failure
+RestartSec=5
+User=filecherry
+Group=filecherry
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=filecherry-kiosk
+
+[Install]
+WantedBy=graphical.target
+

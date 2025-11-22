@@ -1,0 +1,13 @@
+[Unit]
+Description=FileCherry Data Partition
+Before=filecherry-setup.service
+
+[Mount]
+What=/dev/disk/by-label/FILECHERRY_DATA
+Where=/data
+Type=exfat
+Options=uid=filecherry,gid=filecherry,umask=0002
+
+[Install]
+WantedBy=multi-user.target
+

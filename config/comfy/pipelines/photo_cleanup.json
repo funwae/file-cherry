@@ -1,0 +1,25 @@
+{
+  "1": {
+    "inputs": {
+      "image": "IMAGE_INPUT",
+      "brightness": 1.0,
+      "contrast": 1.0,
+      "saturation": 1.0,
+      "sharpness": 1.0
+    },
+    "class_type": "ImageAdjustments",
+    "_meta": {
+      "title": "Image Adjustments"
+    }
+  },
+  "2": {
+    "inputs": {
+      "images": ["1", 0]
+    },
+    "class_type": "SaveImage",
+    "_meta": {
+      "title": "Save Image"
+    }
+  }
+}
+

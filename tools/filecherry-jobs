@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""
+List recent jobs and their statuses.
+
+Usage: filecherry-jobs [--limit N]
+"""
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Dict, List
+
+DATA_DIR = Path(os.getenv("FILECHERRY_DATA_DIR", "/data"))
+OUTPUTS_DIR = DATA_DIR / "outputs"
+
+
+def load_job_manifest(job_id: str) -> Dict:
+    """Load job manifest."""
+    manifest_path = OUTPUTS_DIR / job_id / "manifest.json"
+    if not manifest_path.exists():
+        return {}
+
+    try:
+        with open(manifest_path, "r") as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def list_jobs(limit: int = 10) -> List[Dict]:
+    """List recent jobs."""
+    if not OUTPUTS_DIR.exists():
+        return []
+
+    jobs = []
+    for job_dir in sorted(OUTPUTS_DIR.iterdir(), key=lambda p: p.stat().st_mtime, reverse=True):
+        if not job_dir.is_dir():
+            continue
+
+        job_id = job_dir.name
+        manifest = load_job_manifest(job_id)
+
+        jobs.append({
+            "job_id": job_id,
+            "status": manifest.get("status", "unknown"),
+            "created_at": manifest.get("created_at", "unknown"),
+            "summary": manifest.get("plan", {}).get("summary", "No plan"),
+        })
+
+        if len(jobs) >= limit:
+            break
+
+    return jobs
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description="List FileCherry jobs")
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=10,
+        help="Maximum number of jobs to show (default: 10)",
+    )
+    args = parser.parse_args()
+
+    jobs = list_jobs(args.limit)
+
+    if not jobs:
+        print("No jobs found.")
+        sys.exit(0)
+
+    print(f"{'Job ID':<30} {'Status':<15} {'Created':<20} {'Summary'}")
+    print("-" * 100)
+
+    for job in jobs:
+        job_id = job["job_id"][:28] + ".." if len(job["job_id"]) > 30 else job["job_id"]
+        status = job["status"][:13]
+        created = job["created_at"][:18] if len(job["created_at"]) > 20 else job["created_at"]
+        summary = job["summary"][:50] + ".." if len(job["summary"]) > 52 else job["summary"]
+
+        print(f"{job_id:<30} {status:<15} {created:<20} {summary}")
+
+
+if __name__ == "__main__":
+    main()
+

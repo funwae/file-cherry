@@ -1,0 +1,17 @@
+# Document Indexer Configuration
+
+# Chunking parameters
+chunk_size: 1024          # Characters per chunk
+chunk_overlap: 128        # Overlap between chunks
+
+# Embedding model
+embedding_model: "all-MiniLM-L6-v2"  # sentence-transformers model name
+use_ollama: false         # Set to true to use Ollama embeddings instead
+
+# Limits
+max_file_size_mb: 50      # Maximum file size to index (MB)
+max_total_chars: 10000000 # Maximum total characters to index
+
+# Index storage
+index_dir: "runtime/doc-index"
+

@@ -1,0 +1,26 @@
+[Unit]
+Description=FileCherry Web UI
+After=network.target filecherry-orchestrator.service
+Requires=filecherry-orchestrator.service
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/filecherry/apps/ui
+Environment=NODE_ENV=production
+Environment=ORCHESTRATOR_URL=http://localhost:8000
+Environment=HOST=0.0.0.0
+Environment=PORT=3000
+ExecStart=/usr/bin/node /opt/filecherry/apps/ui/server.js
+Restart=on-failure
+RestartSec=5
+User=filecherry
+Group=filecherry
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=filecherry-ui
+
+[Install]
+WantedBy=multi-user.target
+

@@ -1,0 +1,11 @@
+[Unit]
+Description=FileCherry Log Rotation Timer
+Requires=logrotate.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+

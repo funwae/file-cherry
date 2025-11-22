@@ -1,0 +1,63 @@
+# Photo Cleanup Pipeline Schema
+
+name: "photo_cleanup_v1"
+description: "Clean up and enhance photos for listings (background cleanup, contrast, sharpening)"
+graph_file: "photo_cleanup.json"
+
+inputs:
+  - name: "IMAGE"
+    type: "image_path"
+    description: "Input image file path"
+    required: true
+
+params:
+  - name: "brightness_adjust"
+    type: "float"
+    default: 1.0
+    min: 0.5
+    max: 2.0
+    description: "Brightness adjustment multiplier"
+
+  - name: "contrast_adjust"
+    type: "float"
+    default: 1.0
+    min: 0.5
+    max: 2.0
+    description: "Contrast adjustment multiplier"
+
+  - name: "saturation_adjust"
+    type: "float"
+    default: 1.0
+    min: 0.0
+    max: 2.0
+    description: "Saturation adjustment multiplier"
+
+  - name: "sharpness_adjust"
+    type: "float"
+    default: 1.0
+    min: 0.5
+    max: 2.0
+    description: "Sharpness adjustment multiplier"
+
+outputs:
+  - name: "OUTPUT_IMAGE"
+    type: "image"
+    description: "Processed output image"
+
+semantic_controls:
+  "premium":
+    contrast_adjust: 1.1
+    sharpness_adjust: 1.05
+    saturation_adjust: 0.95
+
+  "less_saturated":
+    saturation_adjust: 0.9
+
+  "bright":
+    brightness_adjust: 1.2
+
+  "professional":
+    contrast_adjust: 1.1
+    sharpness_adjust: 1.1
+    saturation_adjust: 0.9
+

@@ -1,0 +1,23 @@
+[Unit]
+Description=FileCherry Orchestrator
+After=network.target ollama.service comfyui.service data.mount
+Requires=data.mount
+
+[Service]
+Type=simple
+Environment=FILECHERRY_DATA_DIR=/data
+WorkingDirectory=/opt/filecherry
+ExecStart=/opt/filecherry/.venv/bin/python -m src.orchestrator.main
+Restart=on-failure
+RestartSec=5
+User=filecherry
+Group=filecherry
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=filecherry-orchestrator
+
+[Install]
+WantedBy=multi-user.target
+

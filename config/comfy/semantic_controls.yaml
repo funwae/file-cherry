@@ -1,0 +1,28 @@
+# Semantic Controls Mapping
+
+# Global semantic controls that can be applied across pipelines
+global_controls:
+  "premium":
+    contrast: 1.1
+    sharpness: 1.05
+    saturation: 0.95
+
+  "less_saturated":
+    saturation: 0.9
+
+  "bright":
+    brightness: 1.2
+
+  "professional":
+    contrast: 1.1
+    sharpness: 1.1
+    saturation: 0.9
+
+  "vibrant":
+    saturation: 1.2
+    contrast: 1.1
+
+  "muted":
+    saturation: 0.8
+    contrast: 0.9
+

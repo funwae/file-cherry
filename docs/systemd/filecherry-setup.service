@@ -1,0 +1,13 @@
+[Unit]
+Description=FileCherry Setup Service
+After=data.mount
+Requires=data.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/bash -c 'mkdir -p /data/{inputs,outputs,config,logs,runtime} && chown -R filecherry:filecherry /data'
+
+[Install]
+WantedBy=multi-user.target
+
